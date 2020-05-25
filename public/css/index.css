@@ -4,9 +4,10 @@
     --font-size-small: 12px;
 
     --color-main: #3D3D3D;
+    --color-danger: #C10000;
 }
 
-* {
+body {
     direction: ltr;
 }
 
@@ -33,7 +34,6 @@
 
 .fieldTitle {
     display: block;
-    margin-bottom: 10px;
     
     color: var(--color-main);
     font-size: var(--font-size-normal);
@@ -55,7 +55,7 @@
 }
 
 .error {
-    color: #C10000;
+    color: var(--color-danger);
     font-size: var(--font-size-small);
     display: none;
 }
@@ -103,6 +103,28 @@
 
 .add {
     
+}
+
+.addUserHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.cancel {
+    display: none;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 5px;
+    background: none;
+    padding: 3px;
+    
+    color: var(--color-danger);
+    font-size: var(--font-size-small);
+}
+
+.cancel:active {
+    background-color: rgba(0, 0, 0, .1);
 }
 
 .addButton {

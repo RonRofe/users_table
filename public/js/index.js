@@ -12,6 +12,9 @@ let editing; // Currently edited user
 // Elements
 const $tableData = document.querySelector('#tableData');
 const $search = document.querySelector('#search');
+const $addButton = document.querySelector('#addButton');
+const $addEditTitle = document.querySelector('#addEditTitle');
+const $cancelEdit = document.querySelector('#cancelEdit');
 
 const $usernameInput = document.querySelector('input[name="username"]');
 const $emailInput = document.querySelector('input[name="email_address"]');
@@ -89,6 +92,12 @@ const addUser = (user, id) => {
         $fullNameInput.value = users[index].full_name;
         
         editing = index;
+
+        // Refactor style
+        $addButton.textContent = 'Edit';
+        $addEditTitle.textContent = 'Edit user';
+        $addButton.style.backgroundColor = '#DC3C00';
+        $cancelEdit.style.display = 'block';
     })
 
     // Add element to the DOM
@@ -113,30 +122,50 @@ const filterUsers = (value) => {
     });
 };
 
+const stopEdit = () => {
+        editing = null;
+
+        // Refactor style
+        $addButton.textContent = 'Add';
+        $addEditTitle.textContent = 'Add user';
+        $addButton.style.backgroundColor = '#0D79AB';
+
+        $cancelEdit.style.display = 'none';
+
+        // Empty inputs
+        $usernameInput.value = '';
+        $emailInput.value = '';
+        $fullNameInput.value = '';
+};
+
 // Insert default users
 for (let user of users) {
     addUser(user, numUsers++);
 }
 
 // Add user
-document.querySelector('#addButton').addEventListener('click', () => {
+$addButton.addEventListener('click', () => {
     const username = $usernameInput.value;
     const email_address = $emailInput.value;
     const full_name = $fullNameInput.value;
 
     let valid = true;
     
-    // Validations
+    // ---------- Validations
+
+    // Empty username
     if (!username) {
         valid = false;
         showError(0);
     }
 
+    // Empty email address or invalid format
     if (!email_address || !regex.email_address.test(email_address)) {
         valid = false;
         showError(1);
     }
 
+    // Empty fullname
     if (!full_name) {
         valid = false;
         showError(2);
@@ -146,26 +175,50 @@ document.querySelector('#addButton').addEventListener('click', () => {
         return;
     }
 
-    // Edit mode
-    if(editing) {
+    if(typeof editing === 'number') { // ----------------- Edit mode
+        // Check if username is already taken
+        users.forEach((user, index) => {
+            if(index !== editing && user.username === username) {
+                valid = false;
+                showError(0);
+            }
+        });
+
+        if (!valid) {
+            return;
+        }
+    
         users[editing] = { username, email_address, full_name };
         filterUsers($search.value);
 
-        editing = null;
-        return;
-    }
+        stopEdit();
+    } else { // ----------------- Add mode
+        for (let user of users) {
+            if(user.username === username) {
+                valid = false;
+                showError(0);
+            }
+        }
 
-    // Add values to users array
-    addUser({ username, email_address, full_name }, numUsers);
-    users.push({ username, email_address, full_name });
-    
-    // Reset form
-    $usernameInput.value = '';
-    $emailInput.value = '';
-    $fullNameInput.value = '';
+        if (!valid) {
+            return;
+        }
+
+        // Add values to users array
+        addUser({ username, email_address, full_name }, numUsers);
+        users.push({ username, email_address, full_name });
+        
+        // Reset form
+        $usernameInput.value = '';
+        $emailInput.value = '';
+        $fullNameInput.value = '';
+    }
 
     filterUsers($search.value);
 });
 
 // Search user
 $search.addEventListener('input', event => filterUsers(event.target.value));
+
+// Cancel editing
+$cancelEdit.addEventListener('click', stopEdit);
