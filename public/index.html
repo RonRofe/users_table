@@ -23,14 +23,16 @@
             <div class="data">
                 <table class="table">
                     <thead>
-                        <th class="cell cell--header">Username</th>
-                        <th class="cell cell--header">Email address</th>
-                        <th class="cell cell--header">Full name</th>
-                        <th class="cell cell--header">Delete</th>
-                        <th class="cell cell--header">Edit</th>
-                    </thead>
-                    <tbody>
                         <tr>
+                            <th class="cell cell--header">Username</th>
+                            <th class="cell cell--header">Email address</th>
+                            <th class="cell cell--header">Full name</th>
+                            <th class="cell cell--header">Delete</th>
+                            <th class="cell cell--header">Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableData">
+                        <!-- <tr>
                             <td class="cell">rapitec</td>
                             <td class="cell">ron@rapitec.co.il</td>
                             <td class="cell">Ron Rofe</td>
@@ -39,27 +41,27 @@
                             </td>
                             <td class="cell">
                                 <img class="action" src="./images/pencil.svg" alt="Delete">
-                            </td>
+                            </td> -->
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <div class="add">
+            <form class="add">
                 <h2 class="fieldTitle">Add user:</h2>
                 <div>
                     <label>Username:</label>
-                    <input class="input" type="text" maxlength="30">
+                    <input class="input" name="username" type="text" maxlength="30">
                 <div>
                     <label>Email address:</label>
-                    <input class="input" type="email" maxlength="30">
+                    <input class="input" name="email_address" type="email" maxlength="30">
                 </div>
                 <div>
                     <label>Full name:</label>
-                    <input class="input" type="text" maxlength="30">
+                    <input class="input" name="full_name" type="text" maxlength="30">
                 </div>
-                <button class="addButton" type="button">Add</button>
-            </div>
+                <button id="addButton" class="addButton" type="button">Add</button>
+            </form>
         </section>
 
 
