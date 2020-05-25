@@ -1,0 +1,110 @@
+:root {
+    --font-size-big: 30px;
+    --font-size-normal: 14px;
+
+    --color-main: #3D3D3D;
+}
+
+* {
+    direction: ltr;
+}
+
+.header {
+    background-color: #EEE;
+    border-bottom: 1px solid #A7A7A7;
+    padding: 20px 0;
+    margin-bottom: 30px;
+    
+    text-align: center;
+    font-size: var(--font-size-big);
+    color: var(--color-main);
+}
+
+.content {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-gap: 30px 15px;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #EEE;
+    padding: 20px;
+}
+
+.fieldTitle {
+    display: block;
+    margin-bottom: 10px;
+    
+    color: var(--color-main);
+    font-size: var(--font-size-normal);
+    font-weight: 600;
+}
+
+.input {
+    width: 200px;
+    border: 1px solid var(--color-main);
+    border-radius: 20px;
+    padding: 10px 20px;
+
+    font-size: var(--font-size-normal);
+}
+
+.search {}
+
+.search__label {
+    color: var(--color-main);
+    font-size: var(--font-size-normal);
+    font-weight: 600;
+}
+
+.data {
+    grid-row: span 2;
+}
+
+.table {
+    border-radius: 5px;
+    border: 1px solid var(--color-main);
+    width: 100%;
+    background-color: #FFF;
+    padding: 5px;
+    text-align: center;
+}
+
+.cell {
+    padding: 5px;
+    border-bottom: 1px solid var(--color-main);
+}
+
+.cell--header {
+    background-color: var(--color-main);
+    color: #FFF;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+}
+
+.action {
+    height: 20px;
+    width: 20px;
+    object-fit: contain;
+    -webkit-user-drag: none;
+    cursor: pointer;
+}
+
+.add {
+    
+}
+
+.addButton {
+    width: 100%;
+    padding: 10px 40px;
+    background-color: #0D79AB;
+    cursor: pointer;
+    user-select: none;
+
+    font-size: var(--font-size-normal);
+    color: #FFF;
+    border-radius: 20px;
+}
+
+.addButton:hover {
+    background-color: #1174A2;
+}
