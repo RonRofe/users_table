@@ -7,6 +7,7 @@ const users = [
     { username: 'Ronro3', email_address: 'ron@rapitec.co.il', full_name: 'Ron Rofe' },
     { username: 'Ronro4', email_address: 'ron@rapitec.co.il', full_name: 'Ron Rofe' },
 ];
+let editing; // Currently edited user
 
 // Elements
 const $tableData = document.querySelector('#tableData');
@@ -81,7 +82,13 @@ const addUser = (user, id) => {
 
     // Edit listener
     $editImg.addEventListener('click', function () {
-        console.log(this.getAttribute('data-edit-id'));
+        const index = +this.getAttribute('data-edit-id');
+
+        $usernameInput.value = users[index].username;
+        $emailInput.value = users[index].email_address;
+        $fullNameInput.value = users[index].full_name;
+        
+        editing = index;
     })
 
     // Add element to the DOM
@@ -136,6 +143,15 @@ document.querySelector('#addButton').addEventListener('click', () => {
     }
 
     if (!valid) {
+        return;
+    }
+
+    // Edit mode
+    if(editing) {
+        users[editing] = { username, email_address, full_name };
+        filterUsers($search.value);
+
+        editing = null;
         return;
     }
 
