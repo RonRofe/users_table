@@ -1,9 +1,25 @@
+'use strict';
+
 const users = [];
+
+const defaultUsers = [
+    { username: 'Ronro1', email_address: 'ron@rapitec.co.il', full_name: 'Ron Rofe' },
+    { username: 'Ronro2', email_address: 'ron@rapitec.co.il', full_name: 'Ron Rofe' },
+    { username: 'Ronro3', email_address: 'ron@rapitec.co.il', full_name: 'Ron Rofe' },
+    { username: 'Ronro4', email_address: 'ron@rapitec.co.il', full_name: 'Ron Rofe' },
+];
 
 // Elements
 const $usernameInput = document.querySelector('input[name="username"]');
 const $emailInput = document.querySelector('input[name="email_address"]');
 const $fullNameInput = document.querySelector('input[name="full_name"]');
+
+const $errors = document.querySelectorAll('.error');
+
+// regex
+const regex = {
+    email_address: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+};
 
 const addUser = (user) => {
     const $row = document.createElement('tr');
@@ -69,24 +85,49 @@ const addUser = (user) => {
     users.push(user);
 };
 
-const defaultUsers = [
-    { username: 'Ronro1', email_address: 'ron@rapitec.co.il', full_name: 'Ron Rofe' },
-    { username: 'Ronro2', email_address: 'ron@rapitec.co.il', full_name: 'Ron Rofe' },
-    { username: 'Ronro3', email_address: 'ron@rapitec.co.il', full_name: 'Ron Rofe' },
-    { username: 'Ronro4', email_address: 'ron@rapitec.co.il', full_name: 'Ron Rofe' },
-];
+const showError = (id) => {
+    $errors[id].style.display = 'inline';
+        
+    setTimeout(() => {
+        $errors[id].style.display = 'none';
+    }, 2500);
+}
 
-for (user of defaultUsers) {
+// Insert default users
+for (let user of defaultUsers) {
     addUser(user);
 }
 
+// Add user
 document.querySelector('#addButton').addEventListener('click', () => {
+    const username = $usernameInput.value;
+    const email_address = $emailInput.value;
+    const full_name = $fullNameInput.value;
+
+    let valid = true;
+    
+    // Validations
+    if (!username) {
+        valid = false;
+        showError(0);
+    }
+
+    if (!email_address || !regex.email_address.test(email_address)) {
+        valid = false;
+        showError(1);
+    }
+
+    if (!full_name) {
+        valid = false;
+        showError(2);
+    }
+
+    if (!valid) {
+        return;
+    }
+
     // Add values to users array
-    addUser({
-        username: $usernameInput.value,
-        email_address: $emailInput.value,
-        full_name: $fullNameInput.value,
-    });
+    addUser({ username, email_address, full_name });
     
     // Reset form
     $usernameInput.value = '';

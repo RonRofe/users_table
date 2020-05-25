@@ -50,16 +50,20 @@
             <form class="add">
                 <h2 class="fieldTitle">Add user:</h2>
                 <div>
-                    <label>Username:</label>
-                    <input class="input" name="username" type="text" maxlength="30">
-                <div>
-                    <label>Email address:</label>
-                    <input class="input" name="email_address" type="email" maxlength="30">
+                    <label class="label">Username:</label>
+                    <input class="input" name="username" type="text" maxlength="20">
                 </div>
+                <span class="error">Invalid username.</span>
                 <div>
-                    <label>Full name:</label>
-                    <input class="input" name="full_name" type="text" maxlength="30">
+                    <label class="label">Email address:</label>
+                    <input class="input" name="email_address" type="email" maxlength="200">
                 </div>
+                <span class="error">Invalid email address.</span>
+                <div>
+                    <label class="label">Full name:</label>
+                    <input class="input" name="full_name" type="text" maxlength="50">
+                </div>
+                <span class="error">Invalid name.</span>
                 <button id="addButton" class="addButton" type="button">Add</button>
             </form>
         </section>

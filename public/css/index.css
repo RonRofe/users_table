@@ -1,6 +1,7 @@
 :root {
     --font-size-big: 30px;
     --font-size-normal: 14px;
+    --font-size-small: 12px;
 
     --color-main: #3D3D3D;
 }
@@ -39,6 +40,11 @@
     font-weight: 600;
 }
 
+.label {
+    color: var(--color-main);
+    font-size: var(--font-size-normal);
+}
+
 .input {
     width: 200px;
     border: 1px solid var(--color-main);
@@ -46,6 +52,12 @@
     padding: 10px 20px;
 
     font-size: var(--font-size-normal);
+}
+
+.error {
+    color: #C10000;
+    font-size: var(--font-size-small);
+    display: none;
 }
 
 .search {}
@@ -99,6 +111,7 @@
     background-color: #0D79AB;
     cursor: pointer;
     user-select: none;
+    font-weight: 600;
 
     font-size: var(--font-size-normal);
     color: #FFF;
