@@ -119,6 +119,10 @@ const addUser = (user, id) => {
                 }
             }
 
+            if(editing === index) {
+                stopEdit();
+            }
+
             currentNumOfUsers = filterUsers($search.value);
         }
     });
@@ -239,7 +243,7 @@ const markPage = (newPage) => {
     if($pagesList[page]) { // Checks if button still exists
         $pagesList[page].classList.remove('page--selected');
     }
-    
+
     $pagesList[newPage].classList.add('page--selected');
 
     page = newPage;
