@@ -235,10 +235,11 @@ const removeLastPage = () => $pages.lastChild.remove();
 
 const markPage = (newPage) => {
     const $pagesList = $pages.children;
-
-    if(typeof page === 'number') {
+    
+    if($pagesList[page]) { // Checks if button still exists
         $pagesList[page].classList.remove('page--selected');
     }
+    
     $pagesList[newPage].classList.add('page--selected');
 
     page = newPage;
