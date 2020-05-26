@@ -123,7 +123,7 @@ const addUser = (user, id) => {
                 stopEdit();
             }
 
-            currentNumOfUsers = filterUsers($search.value);
+            currentNumOfUsers = filterUsers($search.value, page);
         }
     });
 
@@ -168,7 +168,7 @@ const showError = (id) => {
  * @param {string} value Value to filter the list with (username based)
  * @returns {number} number of filtered found and list
  */
-const filterUsers = (value) => {
+const filterUsers = (value, pageNum) => {
     $tableData.innerHTML = '';
     
     let numFound = 0; // Num of objects match filter
@@ -177,8 +177,8 @@ const filterUsers = (value) => {
             numFound++;
             
             if(
-                numFound > page * MAX_USERS_PER_PAGE &&
-                numFound <= page * MAX_USERS_PER_PAGE + MAX_USERS_PER_PAGE
+                numFound > pageNum * MAX_USERS_PER_PAGE &&
+                numFound <= pageNum * MAX_USERS_PER_PAGE + MAX_USERS_PER_PAGE
             ) {
                 addUser(users[i], i);
             }
@@ -226,7 +226,7 @@ const setPages = (numPages) => {
         $page.addEventListener('click', () => {
             if(page !== i) {
                 markPage(i);
-                filterUsers($search.value);
+                filterUsers($search.value, page);
             }
         });
     }
@@ -309,7 +309,7 @@ $addButton.addEventListener('click', () => {
         }
     
         users[editing] = { username, email_address, full_name };
-        filterUsers($search.value);
+        filterUsers($search.value, page);
 
         stopEdit();
     } else { // ----------------- Add mode
@@ -327,7 +327,7 @@ $addButton.addEventListener('click', () => {
         // Add values to users array
         users.push({ username, email_address, full_name });
 
-        currentNumOfUsers = filterUsers($search.value);
+        currentNumOfUsers = filterUsers($search.value, page);
 
         // Check if a new page added
         if(users.length % MAX_USERS_PER_PAGE === 1) {
@@ -343,7 +343,7 @@ $addButton.addEventListener('click', () => {
 
 // Search user
 $search.addEventListener('input', event => {
-    currentNumOfUsers = filterUsers(event.target.value);
+    currentNumOfUsers = filterUsers(event.target.value, 0);
     const numPages = Math.ceil(currentNumOfUsers / MAX_USERS_PER_PAGE);
     setPages(numPages || 1); // If no users
 
