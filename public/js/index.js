@@ -212,7 +212,7 @@ const stopEdit = () => {
  */
 const setPages = (numPages) => {
     $pages.innerHTML = '';
-    
+
     for(let i = 0; i < numPages; i++) {
         const $page = document.createElement('button');
         $page.appendChild(document.createTextNode(i + 1));
@@ -220,8 +220,10 @@ const setPages = (numPages) => {
         $pages.appendChild($page);
 
         $page.addEventListener('click', () => {
-            markPage(i);
-            filterUsers($search.value);
+            if(page !== i) {
+                markPage(i);
+                filterUsers($search.value);
+            }
         });
     }
 };
@@ -337,7 +339,8 @@ $addButton.addEventListener('click', () => {
 // Search user
 $search.addEventListener('input', event => {
     currentNumOfUsers = filterUsers(event.target.value);
-    setPages(Math.ceil(currentNumOfUsers / MAX_USERS_PER_PAGE));
+    const numPages = Math.ceil(currentNumOfUsers / MAX_USERS_PER_PAGE);
+    setPages(numPages || 1); // If no users
 
     markPage(0);
 });
