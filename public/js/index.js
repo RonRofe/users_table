@@ -115,7 +115,7 @@ const addUser = (user, id) => {
 
                 // Check if needs to go to previous page (as it was the last value of the page where the client is)
                 if (page > 0 && newPageNumber <= page) {
-                    page--;
+                    markPage(page - 1);
                 }
             }
 
