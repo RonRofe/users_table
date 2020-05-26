@@ -14,9 +14,8 @@
         <h1 class="header">Moovex - Users Table | JS Assignment</h1>
 
         <section class="content">
-
             <div class="search">
-                <label class="fieldTitle">Search Username:</label>
+                <label class="fieldTitle fieldTitle--search">Search Username:</label>
                 <input id="search" class="input" type="text" maxlength="30">
             </div>
 
@@ -35,8 +34,8 @@
                         <!-- #### Row Example
                             <tr>
                                 <td class="cell">ronuser</td>
-                                <td class="cell">ron@rapitec.co.il</td>
-                                <td class="cell">Ron Rofe</td>
+                                <td class="cell">ron@mail.co.il</td>
+                                <td class="cell">Ron Ron</td>
                                 <td class="cell">
                                     <img class="action" src="./images/trash.svg" alt="Delete">
                                 </td>
@@ -47,30 +46,42 @@
                         -->
                     </tbody>
                 </table>
+
+                <div id="pages" class="pages">
+                    <!-- <span class="page">1</span> -->
+                </div>
             </div>
 
-            <form class="add">
-                <div class="addUserHeader">
-                    <h2 id="addEditTitle" class="fieldTitle">Add user:</h2>
-                    <button id="cancelEdit" class="cancel" type="button">Cancel Edit</button>
-                </div>
-                <div>
-                    <label class="label">Username:</label>
-                    <input class="input" name="username" type="text" maxlength="20">
-                </div>
-                <span class="error">Invalid username.</span>
-                <div>
-                    <label class="label">Email address:</label>
-                    <input class="input" name="email_address" type="email" maxlength="200">
-                </div>
-                <span class="error">Invalid email address.</span>
-                <div>
-                    <label class="label">Full name:</label>
-                    <input class="input" name="full_name" type="text" maxlength="50">
-                </div>
-                <span class="error">Invalid name.</span>
-                <button id="addButton" class="addButton" type="button">Add</button>
-            </form>
+            <div>
+                <form class="form">
+                    <div class="addUserHeader">
+                        <h2 id="addEditTitle" class="fieldTitle">Add user:</h2>
+                        <button id="cancelEdit" class="cancel" type="button">Cancel Edit</button>
+                    </div>
+                    <div class="inputField">
+                        <div>
+                            <label class="label">Username:</label>
+                            <input class="input" name="username" type="text" maxlength="20">
+                        </div>
+                        <span class="error">Invalid username.</span>
+                    </div>
+                    <div class="inputField">
+                        <div>
+                            <label class="label">Email address:</label>
+                            <input class="input" name="email_address" type="email" maxlength="200">
+                        </div>
+                        <span class="error">Invalid email address.</span>
+                    </div>
+                    <div class="inputField">
+                        <div>
+                            <label class="label">Full name:</label>
+                            <input class="input" name="full_name" type="text" maxlength="50">
+                        </div>
+                    </div>
+                    <span class="error">Invalid name.</span>
+                    <button id="addButton" class="addButton" type="button">Add</button>
+                </form>
+            </div>
         </section>
         <script src="./js/index.js"></script>
     </body>

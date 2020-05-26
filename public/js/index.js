@@ -1,16 +1,41 @@
 'use strict';
 
-let numUsers = 0;
+// ========================================= VARIABLES ========================================= //
+const MAX_USERS_PER_PAGE = 10;
+
 const users = [
-    { username: 'Ronro1', email_address: 'ron@rapitec.co.il', full_name: 'Ron Rofe' },
-    { username: 'Ronro2', email_address: 'ron@rapitec.co.il', full_name: 'Ron Rofe' },
-    { username: 'Ronro3', email_address: 'ron@rapitec.co.il', full_name: 'Ron Rofe' },
-    { username: 'Ronro4', email_address: 'ron@rapitec.co.il', full_name: 'Ron Rofe' },
+    { username: 'User2', email_address: 'ron@email.co.il', full_name: 'Ron Ron' },
+    { username: 'User1', email_address: 'ron@email.co.il', full_name: 'Ron Ron' },
+    { username: 'User3', email_address: 'ron@email.co.il', full_name: 'Ron Ron' },
+    { username: 'User4', email_address: 'ron@email.co.il', full_name: 'Ron Ron' },
+    { username: 'User5', email_address: 'ron@email.co.il', full_name: 'Ron Ron' },
+    { username: 'User6', email_address: 'ron@email.co.il', full_name: 'Ron Ron' },
+    { username: 'User7', email_address: 'ron@email.co.il', full_name: 'Ron Ron' },
+    { username: 'User8', email_address: 'ron@email.co.il', full_name: 'Ron Ron' },
+    { username: 'User9', email_address: 'ron@email.co.il', full_name: 'Ron Ron' },
+    { username: 'User10', email_address: 'ron@email.co.il', full_name: 'Ron Ron' },
+    { username: 'User11', email_address: 'ron@email.co.il', full_name: 'Ron Ron' },
+    { username: 'User12', email_address: 'ron@email.co.il', full_name: 'Ron Ron' },
+    { username: 'User13', email_address: 'ron@email.co.il', full_name: 'Ron Ron' },
+    { username: 'User14', email_address: 'ron@email.co.il', full_name: 'Ron Ron' },
+    { username: 'User15', email_address: 'ron@email.co.il', full_name: 'Ron Ron' },
+    { username: 'User16', email_address: 'ron@email.co.il', full_name: 'Ron Ron' },
+    { username: 'User17', email_address: 'ron@email.co.il', full_name: 'Ron Ron' },
+    { username: 'User18', email_address: 'ron@email.co.il', full_name: 'Ron Ron' },
 ];
+
+let currentNumOfUsers = 0;
 let editing; // Currently edited user
+let page = 0;
+
+// regex
+const regex = {
+    email_address: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+};
 
 // Elements
 const $tableData = document.querySelector('#tableData');
+const $pages = document.querySelector('#pages');
 const $search = document.querySelector('#search');
 const $addButton = document.querySelector('#addButton');
 const $addEditTitle = document.querySelector('#addEditTitle');
@@ -22,11 +47,13 @@ const $fullNameInput = document.querySelector('input[name="full_name"]');
 
 const $errors = document.querySelectorAll('.error');
 
-// regex
-const regex = {
-    email_address: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-};
+// ========================================= FUNCTIONS ========================================= //
 
+/**
+ * Add user row to the DOM
+ * @param {Object} user object of user
+ * @param {number} id id of the user for delete + edit buttons' data
+ */
 const addUser = (user, id) => {
     const $row = document.createElement('tr');
 
@@ -69,7 +96,6 @@ const addUser = (user, id) => {
         
         if (toDelete) {
             users.splice(index ,1);
-            numUsers--;
             
             this.parentNode.parentNode.remove(); // td element
 
@@ -80,6 +106,20 @@ const addUser = (user, id) => {
                 $delete_buttons[i].setAttribute('data-delete-id', currentId - 1); // Delete button id
                 $edit_buttons[i].setAttribute('data-edit-id', currentId - 1); // Edit button id
             }
+
+            const newPageNumber = Math.ceil((currentNumOfUsers - 1) / MAX_USERS_PER_PAGE);
+
+            // Check if needs to remove one page
+            if(newPageNumber !== 0 && newPageNumber !== Math.ceil(currentNumOfUsers / MAX_USERS_PER_PAGE)) {
+                removeLastPage();
+
+                // Check if needs to go to previous page (as it was the last value of the page where the client is)
+                if (page > 0 && newPageNumber <= page) {
+                    page--;
+                }
+            }
+
+            currentNumOfUsers = filterUsers($search.value);
         }
     });
 
@@ -98,12 +138,19 @@ const addUser = (user, id) => {
         $addEditTitle.textContent = 'Edit user';
         $addButton.style.backgroundColor = '#DC3C00';
         $cancelEdit.style.display = 'block';
+
+        // Cancel editing
+        $cancelEdit.addEventListener('click', stopEdit);
     })
 
     // Add element to the DOM
     $tableData.appendChild($row);
 };
 
+/**
+ * Show error on the DOM for 2.5 seconds
+ * @param {number} id Error index in the dom
+ */
 const showError = (id) => {
     $errors[id].style.display = 'inline';
         
@@ -112,16 +159,34 @@ const showError = (id) => {
     }, 2500);
 }
 
+/**
+ * Filter users list on the DOM
+ * @param {string} value Value to filter the list with (username based)
+ * @returns {number} number of filtered found and list
+ */
 const filterUsers = (value) => {
     $tableData.innerHTML = '';
-
-    users.forEach((user, index) => {
-        if(user.username.toLowerCase().startsWith(value.toLowerCase())) {
-            addUser(user, index);
+    
+    let numFound = 0; // Num of objects match filter
+    for(let i = 0; i < users.length; i++) {
+        if(users[i].username.toLowerCase().startsWith(value.toLowerCase())) {
+            numFound++;
+            
+            if(
+                numFound > page * MAX_USERS_PER_PAGE &&
+                numFound <= page * MAX_USERS_PER_PAGE + MAX_USERS_PER_PAGE
+            ) {
+                addUser(users[i], i);
+            }
         }
-    });
+    }
+
+    return numFound;
 };
 
+/**
+ * Switch back to "add" mode
+ */
 const stopEdit = () => {
         editing = null;
 
@@ -136,12 +201,60 @@ const stopEdit = () => {
         $usernameInput.value = '';
         $emailInput.value = '';
         $fullNameInput.value = '';
+
+        // Remove click to cancel listener
+        $cancelEdit.removeEventListener('click', stopEdit);
 };
 
-// Insert default users
-for (let user of users) {
-    addUser(user, numUsers++);
+/**
+ * Rebuild the pages bar
+ * @param {number} numPages Number of pages to build
+ */
+const setPages = (numPages) => {
+    $pages.innerHTML = '';
+    
+    for(let i = 0; i < numPages; i++) {
+        const $page = document.createElement('button');
+        $page.appendChild(document.createTextNode(i + 1));
+        $page.classList.add('page');
+        $pages.appendChild($page);
+
+        $page.addEventListener('click', () => {
+            markPage(i);
+            filterUsers($search.value);
+        });
+    }
+};
+
+/**
+ * Remove the last page button in the pages container
+ */
+const removeLastPage = () => $pages.lastChild.remove();
+
+const markPage = (newPage) => {
+    const $pagesList = $pages.children;
+
+    if(typeof page === 'number') {
+        $pagesList[page].classList.remove('page--selected');
+    }
+    $pagesList[newPage].classList.add('page--selected');
+
+    page = newPage;
+};
+
+// ========================================= INITIALIZATION ========================================= //
+// Initialization of the list with the default users list
+for (let i = 0; i < users.length && i < MAX_USERS_PER_PAGE; i++) {
+    addUser(users[i], i);
 }
+
+currentNumOfUsers = users.length;
+
+setPages(Math.ceil(currentNumOfUsers / MAX_USERS_PER_PAGE));
+
+markPage(page);
+
+// ========================================= EVENT LISTENERS ========================================= //
 
 // Add user
 $addButton.addEventListener('click', () => {
@@ -205,20 +318,26 @@ $addButton.addEventListener('click', () => {
         }
 
         // Add values to users array
-        addUser({ username, email_address, full_name }, numUsers);
         users.push({ username, email_address, full_name });
-        
+
+        currentNumOfUsers = filterUsers($search.value);
+
+        // Check if a new page added
+        if(users.length % MAX_USERS_PER_PAGE === 1) {
+            setPages(Math.ceil(currentNumOfUsers / MAX_USERS_PER_PAGE));
+        }
+
         // Reset form
         $usernameInput.value = '';
         $emailInput.value = '';
         $fullNameInput.value = '';
     }
-
-    filterUsers($search.value);
 });
 
 // Search user
-$search.addEventListener('input', event => filterUsers(event.target.value));
+$search.addEventListener('input', event => {
+    currentNumOfUsers = filterUsers(event.target.value);
+    setPages(Math.ceil(currentNumOfUsers / MAX_USERS_PER_PAGE));
 
-// Cancel editing
-$cancelEdit.addEventListener('click', stopEdit);
+    markPage(0);
+});

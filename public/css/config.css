@@ -5,6 +5,9 @@
 }
 
 body {
+    display: flex;
+    flex-direction: column;
+    direction: ltr;
     margin: 0;
     height: 100vh;
     width: 100vw;
